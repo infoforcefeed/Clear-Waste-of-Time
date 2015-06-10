@@ -1,3 +1,13 @@
+## What is this?
+
+A collection of dumb IRC ideas. So far:
+
+* An RGB to HSV converter because we kept saying `hue`
+* a pdf-to-jpg converter because why not?
+* An implementation of a Script downloading protocol. Just go read the readme in there.
+
+## PDF specifics
+
 ```
 2015-05-11 01:17:45     coalbe  i enjoyed http://www.mindfulvalley.org/files/books/mindfulness_plain_english.pdf
 2015-05-11 01:22:27     jnerula PDF is my trigger animal
