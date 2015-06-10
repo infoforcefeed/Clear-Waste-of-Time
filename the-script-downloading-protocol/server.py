@@ -1,6 +1,6 @@
 #!/usr/bin/env python2
 from sys import argv
-import socket, zlib
+import socket, zlib, select, termios, fcntl, array, mmap
 
 
 THE_PROTOCOL_PORT = 65302
@@ -12,6 +12,7 @@ def main(to_serve):
         to_serve_file = open(to_serve)
     except:
         return
+    mmapd_file = mmap.mmap(to_serve_file.fileno(), 0, prot = mmap.PROT_READ)
 
     udp_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     udp_sock.bind((THE_IP_ADDY, THE_PROTOCOL_PORT))
@@ -26,6 +27,20 @@ def main(to_serve):
 
         print "GOT HI!"
         udp_sock.sendto(gzip_encoded_hi, addr)
+
+        readable, _, _ = select.select([udp_sock], [], [], 5000)
+        buf = array.array('i', [0]) # The fuck does this work?
+        fcntl.ioctl(readable[0].fileno(), termios.FIONREAD, buf, True)
+
+        if buf <= 0:
+            print "Nothing on the other side."
+            continue
+
+        gzip_encoded_ssn, addr = udp_sock.recvfrom(buf[0])
+        # TODO: FUCK VALIDATION ASSUME CORRECT
+        print "SSN IS {}".format(zlib.decompress(gzip_encoded_ssn))
+
+        udp_sock.sendto(mmapd_file.readline(), addr)
 
 if __name__ == '__main__':
     to_serve = argv[1]
