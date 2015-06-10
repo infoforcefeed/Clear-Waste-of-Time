@@ -40,7 +40,8 @@ def main(to_serve):
         # TODO: FUCK VALIDATION ASSUME CORRECT
         print "SSN IS {}".format(zlib.decompress(gzip_encoded_ssn))
 
-        udp_sock.sendto(mmapd_file.readline(), addr)
+        print "Sending file!"
+        udp_sock.sendto(zlib.compress(mmapd_file.read(mmapd_file.size())), addr)
 
 if __name__ == '__main__':
     to_serve = argv[1]

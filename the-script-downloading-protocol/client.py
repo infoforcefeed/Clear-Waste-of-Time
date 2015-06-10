@@ -29,8 +29,9 @@ def main(ip_address, ssn):
         print "Nothing on the other side."
         return
 
-    gzip_encoded_file = udp_sock.recvfrom(buf[0])
-    print "FILE IS: {}".format(gzip_encoded_file)
+    full_file, addr = udp_sock.recvfrom(buf[0])
+    gzip_decoded_file = zlib.decompress(full_file)
+    print "FILE IS: {}".format(gzip_decoded_file)
 
 if __name__ == '__main__':
     ip_address = argv[1]
